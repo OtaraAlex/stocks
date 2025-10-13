@@ -13,18 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut } from "@/lib/actions/auth.actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-const UserDropdown = () => {
+const UserDropdown = ({ user }: { user: User }) => {
   const router = useRouter();
-  const handleSignOut = async () => {
-    // await signOut();
-    router.push("/sign-in");
-  };
 
-  const user = {
-    name: "Alex O.",
-    email: "contact@alexotara.com",
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/sign-in");
   };
 
   return (
