@@ -17,7 +17,7 @@ async function fetchJSON<T>(
       ? { cache: "force-cache", next: { revalidate: revalidateSeconds } }
       : { cache: "no-store" };
 
-  const res = await fetch(url, options);
+  const res = await fetch(url, { ...options, signal: AbortSignal.timeout(8000) });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`Fetch failed ${res.status}: ${text}`);
