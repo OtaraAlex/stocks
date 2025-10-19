@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   CommandDialog,
@@ -38,7 +38,7 @@ export default function SearchCommand({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     if (!isSearchMode) return setStocks(initialStocks);
 
     setLoading(true);
@@ -50,13 +50,13 @@ export default function SearchCommand({
     } finally {
       setLoading(false);
     }
-  };
+  }, [isSearchMode, searchTerm, initialStocks]);
 
   const debouncedSearch = useDebounce(handleSearch, 300);
 
   useEffect(() => {
     debouncedSearch();
-  }, [searchTerm]);
+  }, [searchTerm, debouncedSearch]);
 
   const handleSelectStock = () => {
     setOpen(false);
@@ -67,7 +67,18 @@ export default function SearchCommand({
   return (
     <>
       {renderAs === "text" ? (
-        <span onClick={() => setOpen(true)} className="search-text">
+        <span
+          onClick={() => setOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setOpen(true);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          className="search-text cursor-pointer"
+        >
           {label}
         </span>
       ) : (
