@@ -1,6 +1,7 @@
 "use server";
 
 import { cache } from "react";
+
 import { POPULAR_STOCK_SYMBOLS } from "@/lib/constants";
 import { getDateRange, validateArticle, formatArticle } from "@/lib/utils";
 
@@ -17,7 +18,7 @@ async function fetchJSON<T>(
       ? { cache: "force-cache", next: { revalidate: revalidateSeconds } }
       : { cache: "no-store" };
 
-  const res = await fetch(url, { ...options, signal: AbortSignal.timeout(8000) });
+  const res = await fetch(url, options);
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`Fetch failed ${res.status}: ${text}`);
